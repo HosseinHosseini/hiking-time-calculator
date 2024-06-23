@@ -62,46 +62,27 @@
     <script>
         function calculateTime() {
             // Get the values from the input fields
-            const timeToBeAtTrailheadInput = document.getElementById('trailhead-time');
+            const timeToBeAtTrailhead = document.getElementById('trailhead-time').value;
             const travelTimeMinutes = parseInt(document.getElementById('travel-time').value, 10);
-
-            // Get the time value from the input (workaround for browser inconsistencies)
-            const timeToBeAtTrailhead = timeToBeAtTrailheadInput.value;
-            
-            // Split the time string to extract hours and minutes
-            const timeParts = timeToBeAtTrailhead.split(':');
-            
-            // Validate the time input format
-            if (timeParts.length !== 2) {
-                document.getElementById('result').innerText = "Invalid time format!";
-                return;
-            }
-
-            // Parse hours and minutes
-            const trailheadHours = parseInt(timeParts[0], 10);
-            const trailheadMinutes = parseInt(timeParts[1], 10);
-
-            // Validate parsed values
-            if (isNaN(trailheadHours) || isNaN(trailheadMinutes)) {
-                document.getElementById('result').innerText = "Invalid time format!";
-                return;
-            }
-
-            // Calculate the total minutes to be at the trailhead
-            let totalMinutes = trailheadHours * 60 + trailheadMinutes;
 
             // Check if travel time exceeds 180 minutes
             if (travelTimeMinutes > 180) {
-                document.getElementById('result').innerText = "NO!";
+                document.getElementById('result').innerText = "Don't go!";
                 return;
             }
+
+            // Parse the trailhead time
+            const [trailheadHours, trailheadMinutes] = timeToBeAtTrailhead.split(':').map(Number);
+
+            // Calculate the total minutes to be at the trailhead
+            let totalMinutes = trailheadHours * 60 + trailheadMinutes;
 
             // Subtract the travel time in minutes
             totalMinutes -= travelTimeMinutes;
 
             // Check if the time to leave is on the previous day
             if (totalMinutes < 0) {
-                document.getElementById('result').innerText = "Don't go!";
+                document.getElementById('result').innerText = "You think you're smart, huh?";
                 return;
             }
 
@@ -125,14 +106,14 @@
     <h1>Hiking Departure Time Calculator</h1>
     <div class="container">
         <div class="input-group">
-            <label for="trailhead-time">Time to be at the trailhead (24-hour format):</label>
+            <label for="trailhead-time">Time to be at the trailhead:</label>
             <input type="time" id="trailhead-time" required>
         </div>
         <div class="input-group">
             <label for="travel-time">Time it takes from my house to trailhead (minutes):</label>
             <input type="number" id="travel-time" min="1" required>
         </div>
-        <button type="button" onclick="calculateTime()">Calculate Time to Leave</button>
+        <button onclick="calculateTime()">Calculate Time to Leave</button>
         <p id="result" class="result"></p>
     </div>
 </body>
